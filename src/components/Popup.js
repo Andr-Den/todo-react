@@ -1,9 +1,10 @@
 import React from 'react'
 
-function Popup() {
+function Popup({onClose}) {
 
   return (
       <div>
+        <button onClick={onClose}>X</button>
         <form>
           <fieldset>
             <h2>Новое дело</h2>
