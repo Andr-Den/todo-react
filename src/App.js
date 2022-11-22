@@ -8,6 +8,9 @@ function App() {
 
   const [items, setItems] = React.useState([{ title: 'Почистить зубы', description: '', date: '11.12.13' }])
   const [popupOpen, setPopupOpen] = React.useState(false)
+  const [title, setTitle] = React.useState('')
+  const [description, setDescription] = React.useState('')
+  const [date, setDate] = React.useState('')
 
   function handleOpenPopup() {
     setPopupOpen(true) 
@@ -17,6 +20,16 @@ function App() {
     setPopupOpen(false) 
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+      setPopupOpen(false)
+      const item = {title: title, description: description, date: date}
+      setItems([...items, item])
+      setTitle()
+      setDescription()
+      setDate()
+  }
+
   React.useEffect(() => {
     
   }, [items])
@@ -24,8 +37,8 @@ function App() {
   return (
     <div className="App">
       <Header onClick={handleOpenPopup}/>
-      <TodoList items={items} setItems={items}/>
-      {popupOpen ? <Popup onClose={handleClosePopup}/> : ''}
+      <TodoList items={items} setItems={items} />
+      {popupOpen ? <Popup onClose={handleClosePopup} title={title} setTitle={setTitle} description={description} setDescription={setDescription}  date={date} setDate={setDate} onSubmit={handleSubmit} items/> : ''}
     </div>
   );
 }
