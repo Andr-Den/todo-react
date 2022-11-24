@@ -27,3 +27,13 @@ module.exports.createPoint = (req, res, next) => {
       }
     });
 };
+
+module.exports.deletePoint = (req, res, next) => {
+  Point.findById(req.params._id)
+    .orFail(new Error('Запрашиваемая запись не найдена'))
+    .then((note) => note.remove())
+    .then(() => res.send({ message: 'Запись успешно удалена' }))
+    .catch((error) => {
+      next(error);
+    });
+};
