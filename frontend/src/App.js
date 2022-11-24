@@ -4,16 +4,18 @@ import Header from './components/Header';
 import TodoList from './components/TodoList'
 import Popup from './components/Popup';
 
+import * as api from './utils/api';
+
 function App() {
 
-  const [items, setItems] = React.useState([{ title: 'Почистить зубы', description: '', date: '11.12.13' }])
+  const [items, setItems] = React.useState([])
   const [popupOpen, setPopupOpen] = React.useState(false)
   const [title, setTitle] = React.useState('')
   const [description, setDescription] = React.useState('')
   const [date, setDate] = React.useState('')
 
   function handleOpenPopup() {
-    setPopupOpen(true) 
+    setPopupOpen(true)
   }
 
   function handleClosePopup() {
@@ -21,24 +23,32 @@ function App() {
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
+    api.savePoint(title, description, date)
+    .then((data) => {
+      setItems([...items, data.data])})
       setPopupOpen(false)
-      const item = {title: title, description: description, date: date}
-      setItems([...items, item])
-      setTitle()
-      setDescription()
-      setDate()
+  }
+
+  function deleteItem(data) {
+    api.deletePoint(data)
+    .then(() => {
+      setItems(items)
+    })
   }
 
   React.useEffect(() => {
-    
+    api.getPoints()
+    .then((res) => {
+      setItems(res.data)
+    })
   }, [items])
 
   return (
     <div className="App">
       <Header onClick={handleOpenPopup}/>
-      <TodoList items={items} setItems={items} />
-      {popupOpen ? <Popup onClose={handleClosePopup} title={title} setTitle={setTitle} description={description} setDescription={setDescription}  date={date} setDate={setDate} onSubmit={handleSubmit} items/> : ''}
+      <TodoList items={items} setItems={items} onClick={deleteItem}/>
+      {popupOpen ? <Popup onClose={handleClosePopup} title={title} setTitle={setTitle} description={description} setDescription={setDescription}  date={date} setDate={setDate} onSubmit={handleSubmit}/> : ''}
     </div>
   );
 }
